@@ -9,20 +9,38 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object DataBaseControlPlugin extends AutoPlugin {
 
-//  override lazy val projectSettings = Seq(commands += createDataBase)
+//
 
   protected val driver = com.typesafe.slick.driver.oracle.OracleDriver
 
   object autoImport {
-//    val createDataBase = taskKey[Unit]("createDataBase")
+    import driver.api._
+
+    val slickDataBaseConfig = settingKey[String]("slickDataBaseConfig")
+    val slickTables = settingKey[List[TableQuery[Table[Any]]]]("slickTables")
+    val createDataBase = taskKey[Unit]("createDataBase")
+
+    lazy val dataBaseSettings: Seq[Def.Setting[_]] = Seq(
+      slickDataBaseConfig := "cobros",
+      slickTables := List(),
+      createDataBase := createDataBaseTask
+    )
   }
-  def createDataBase() ={
+
+  import autoImport._
+
+  override def trigger = allRequirements
+  override lazy val projectSettings = inConfig(Compile)(dataBaseSettings)
+
+
+  lazy val createDataBaseTask = Def.task{
 
     import driver.api._
 
     val tables: List[TableQuery[Table[Any]]] = List()
+    val slickConfig: String = ""
 
-    val db = Database.forConfig("cobros")
+    val db = Database.forConfig(slickConfig)
     try {
       val existing = db.run(MTable.getTables)
       val f = existing.flatMap( v => {

@@ -1,7 +1,7 @@
 name := "sbt-dataBaseControl"
 organization := "com.co.devco"
 version := "1.0"
-scalaVersion := "2.11.7"
+scalaVersion := "2.10.6"
 sbtPlugin := true
 
 resolvers ++= Seq(
