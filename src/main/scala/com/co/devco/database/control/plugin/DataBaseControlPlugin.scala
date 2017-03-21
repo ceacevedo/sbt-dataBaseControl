@@ -1,26 +1,26 @@
-import sbt._
-import Keys._
+package com.co.devco.database.control.plugin
 
+import sbt._
+import sbt.Keys._
+import slick.jdbc.meta.MTable
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.Implicits.global
 
-object DataBseControlPlugin extends AutoPlugin {
+object DataBaseControlPlugin extends AutoPlugin {
 
-  override lazy val projectSettings = Seq(commands += createDataBase)
+//  override lazy val projectSettings = Seq(commands += createDataBase)
 
-  protected val driver = com.typesafe.slick.driver.oracle.OracleDriver // scalastyle:ignore
+  protected val driver = com.typesafe.slick.driver.oracle.OracleDriver
 
   object autoImport {
-    val createDataBase = taskKey[Unit]("createDataBase")
+//    val createDataBase = taskKey[Unit]("createDataBase")
   }
-
-  import autoImport._
   def createDataBase() ={
 
-    val tables = List(
-//      TablasGruposCoberturas.gruposCoberturas,
-//      TablasReaseguroFacturaProcesado.reaseguroFacturaProcesado
-    )
+    import driver.api._
+
+    val tables: List[TableQuery[Table[Any]]] = List()
 
     val db = Database.forConfig("cobros")
     try {
